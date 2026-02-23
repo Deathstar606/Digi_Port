@@ -222,6 +222,7 @@ const Navbar = () => {
                     color: "white",
                     fontSize: "18px",
                     fontWeight: "500",
+                    cursor: "pointer",
                   }}
                   to="aboutus"
                   spy={true}
@@ -239,6 +240,7 @@ const Navbar = () => {
                     color: "white",
                     fontSize: "18px",
                     fontWeight: "500",
+                    cursor: "pointer",
                   }}
                   to="casestu"
                   spy={true}
@@ -256,6 +258,7 @@ const Navbar = () => {
                     color: "white",
                     fontSize: "18px",
                     fontWeight: "500",
+                    cursor: "pointer",
                   }}
                   to="services"
                   spy={true}

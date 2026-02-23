@@ -26,7 +26,12 @@ const HeroSec = () => {
         <h4>Scroll</h4>
         <Link to="brand" smooth={true} duration={500}>
           <img
-            style={{ height: 50, width: 50, marginLeft: "10px" }}
+            style={{
+              height: 50,
+              width: 50,
+              marginLeft: "10px",
+              cursor: "pointer",
+            }}
             src={arrow}
           />
         </Link>

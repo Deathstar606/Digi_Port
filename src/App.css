@@ -210,12 +210,14 @@ body {
 }
 
 .catimg {
-  transition: opacity 0.3s ease;
+  /* We switch the transition to track the filter property */
+  transition: filter 0.3s ease;
   max-width: 100%;
   height: auto;
   object-fit: contain;
 }
 
 .catimg:hover {
-  opacity: 0.7; /* Adjust as needed */
+  /* 1.0 is normal, lower is darker, higher is lighter */
+  filter: brightness(0.5);
 }
