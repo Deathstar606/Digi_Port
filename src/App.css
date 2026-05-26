@@ -189,35 +189,44 @@ body {
   width: 150px;
 }
 
-.cat-body {
-  position: absolute;
-  bottom: -100px;
-  left: 0; /* Start from the left */
-  padding: 0px 0px 20px 30px;
-  transition: bottom 0.3s ease;
-  visibility: hidden;
-  text-align: center; /* Optional: centers text within the box */
-}
-
 .catcard {
   overflow: hidden;
   position: relative;
+  height: 500px; /* NEW FEATURE: Fixed height applied here. Adjust as needed. */
+  width: 100%;
+}
+
+@media (max-width: 639px) {
+  .catcard {
+    height: 300px;
+  }
+}
+
+/* NEW FEATURE: Ensuring image fills the fixed-height container responsively */
+.catcard .catimg {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: filter 0.3s ease;
+}
+
+/* STRICT STYLING DIRECTIVE: Using brightness instead of opacity */
+.catcard:hover .catimg {
+  filter: brightness(60%);
+}
+
+.cat-body {
+  position: absolute;
+  bottom: -100px; /* Start hidden below the container */
+  left: 0;
+  width: 100%;
+  padding: 15px;
+  visibility: hidden;
+  transition: all 0.3s ease-in-out;
+  background: transparent; /* Optional: add rgba(0,0,0,0.5) if text needs more contrast */
 }
 
 .catcard:hover .cat-body {
   bottom: 0; /* Slide up on hover */
   visibility: visible; /* Make visible on hover */
-}
-
-.catimg {
-  /* We switch the transition to track the filter property */
-  transition: filter 0.3s ease;
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
-.catimg:hover {
-  /* 1.0 is normal, lower is darker, higher is lighter */
-  filter: brightness(0.5);
 }
