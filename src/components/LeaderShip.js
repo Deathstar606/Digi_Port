@@ -83,14 +83,36 @@ function Leaders(people) {
     <div className="leader-container">
       <div className="leader-Img">
         <div className="pt-4 pb-5" style={{ backgroundColor: "#f1593a" }}>
-          <div className="text-center">
+          <div className="text-center pt-4 pb-3">
             <h1
-              className="pt-4 row-header"
-              style={{ fontSize: "clamp(54px, 4vw, 100px)" }}
+              className="row-header text-center"
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "clamp(36px, 5vw, 76px)",
+                fontWeight: 800,
+                letterSpacing: "1.5px",
+                lineHeight: 1.15,
+                textTransform: "uppercase",
+                color: "#ffffff",
+                margin: 0,
+              }}
             >
               Our Team
             </h1>
-            <h5 className="pb-5">Know About Us</h5>
+            <h5
+              className="pt-2 pb-4 text-center"
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "clamp(12px, 1.2vw, 16px)",
+                fontWeight: 600,
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+                color: "rgba(255, 255, 255, 0.9)",
+                margin: 0,
+              }}
+            >
+              Know About Us
+            </h5>
           </div>
           <Container className="pb-4" style={{ maxWidth: "80%" }}>
             <motion.div

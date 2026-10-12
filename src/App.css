@@ -192,41 +192,120 @@ body {
 .catcard {
   overflow: hidden;
   position: relative;
-  height: 500px; /* NEW FEATURE: Fixed height applied here. Adjust as needed. */
+  height: 480px;
   width: 100%;
+  border-radius: 18px;
+  background-color: #121212;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease;
+}
+
+.catcard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(241, 89, 58, 0.25);
+  border-color: rgba(241, 89, 58, 0.5);
 }
 
 @media (max-width: 639px) {
   .catcard {
-    height: 300px;
+    height: 320px;
+    border-radius: 14px;
   }
 }
 
-/* NEW FEATURE: Ensuring image fills the fixed-height container responsively */
 .catcard .catimg {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  transition: filter 0.3s ease;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease;
 }
 
-/* STRICT STYLING DIRECTIVE: Using brightness instead of opacity */
 .catcard:hover .catimg {
-  filter: brightness(60%);
+  transform: scale(1.05);
+  filter: brightness(85%);
+}
+
+.cat-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.45) 0%,
+    rgba(0, 0, 0, 0.05) 35%,
+    rgba(0, 0, 0, 0.4) 65%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+  pointer-events: none;
+  transition: background 0.4s ease;
+  z-index: 1;
+}
+
+.catcard:hover .cat-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.15) 35%,
+    rgba(0, 0, 0, 0.6) 65%,
+    rgba(0, 0, 0, 0.98) 100%
+  );
+}
+
+.cat-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(241, 89, 58, 0.9);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  opacity: 0.85;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.catcard:hover .cat-play-btn {
+  transform: translate(-50%, -50%) scale(1.08);
+  opacity: 1;
+  background-color: #f1593a;
+  box-shadow: 0 0 30px rgba(241, 89, 58, 0.7);
+}
+
+@media (max-width: 639px) {
+  .cat-play-btn {
+    width: 48px;
+    height: 48px;
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 .cat-body {
   position: absolute;
-  bottom: -100px; /* Start hidden below the container */
+  bottom: 0;
   left: 0;
   width: 100%;
-  padding: 15px;
-  visibility: hidden;
-  transition: all 0.3s ease-in-out;
-  background: transparent; /* Optional: add rgba(0,0,0,0.5) if text needs more contrast */
+  padding: 24px;
+  visibility: visible;
+  transition: all 0.35s ease-in-out;
+  background: transparent;
+  z-index: 3;
+  text-align: left;
 }
 
-.catcard:hover .cat-body {
-  bottom: 0; /* Slide up on hover */
-  visibility: visible; /* Make visible on hover */
+@media (max-width: 639px) {
+  .cat-body {
+    padding: 16px;
+  }
 }
