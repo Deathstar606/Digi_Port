@@ -64,20 +64,6 @@ const CaseCard = ({ ca, index }) => {
               >
                 Case #{caseNumber}
               </span>
-              <span
-                style={{
-                  backgroundColor: "rgba(241, 89, 58, 0.85)",
-                  color: "#ffffff",
-                  fontSize: "0.7rem",
-                  fontWeight: 700,
-                  letterSpacing: "1px",
-                  textTransform: "uppercase",
-                  borderRadius: "20px",
-                  padding: "4px 12px",
-                }}
-              >
-                Film
-              </span>
             </div>
 
             {/* Centered Play Button Indicator */}
