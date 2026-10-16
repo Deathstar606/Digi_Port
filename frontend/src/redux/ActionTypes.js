@@ -1,0 +1,13 @@
+export const CASE_LOADING = 'CASE_LOADING';
+export const CASE_FAILED = 'CASE_FAILED';
+export const ADD_CASE = 'ADD_CASE';
+
+export const PEOPLE_LOADING = 'PEOPLE_LOADING';
+export const PEOPLE_FAILED = 'PEOPLE_FAILED';
+export const ADD_PEOPLE = 'ADD_PEOPLE';
+
+export const LOGIN_REQUEST = 'LOGIN_REQUEST';
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';

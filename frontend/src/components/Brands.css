@@ -1,0 +1,25 @@
+@keyframes slide {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+}
+
+.logos {
+    overflow: hidden;
+    position: relative;
+}
+
+.logos:before,
+.logos:after {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+
+.logos-slide {
+    display: inline-block;
+    animation: 35s slide infinite linear;
+  }
