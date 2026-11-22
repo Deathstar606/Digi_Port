@@ -1,17 +1,31 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import {
-  FaExpand,
-  FaExternalLinkAlt,
-  FaChevronDown,
-  FaTimes,
-} from "react-icons/fa";
+import { FaPlay } from "react-icons/fa";
+import { getCaseDemoDescription } from "../data/case";
+
+const VIRTUAL_PLAYER_WIDTH = 960;
+const VIRTUAL_PLAYER_HEIGHT = 540;
+
+const getAutoplayPreviewUrl = (url) => {
+  if (!url) return "";
+  try {
+    const parsed = new URL(url);
+    parsed.searchParams.set("autoplay", "1");
+    return parsed.toString();
+  } catch {
+    return url.includes("?") ? `${url}&autoplay=1` : `${url}?autoplay=1`;
+  }
+};
 
 function CaseDeats(props) {
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth < 768 : false
   );
-  const [isTheaterOpen, setIsTheaterOpen] = useState(false);
+  const [isMobilePlaying, setIsMobilePlaying] = useState(false);
+  const [mobileBoxWidth, setMobileBoxWidth] = useState(
+    typeof window !== "undefined" ? Math.max(280, window.innerWidth - 28) : 347
+  );
+  const mobilePlayerRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,397 +35,429 @@ function CaseDeats(props) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  if (props.case) {
+  useEffect(() => {
+    if (!isMobile || !mobilePlayerRef.current) return;
+    const node = mobilePlayerRef.current;
+    const updateWidth = () => {
+      if (node.clientWidth > 0) {
+        setMobileBoxWidth(node.clientWidth);
+      }
+    };
+    updateWidth();
+    if (typeof ResizeObserver !== "undefined") {
+      const observer = new ResizeObserver(updateWidth);
+      observer.observe(node);
+      return () => observer.disconnect();
+    }
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, [isMobile, props.case?._id]);
+
+  useEffect(() => {
+    setIsMobilePlaying(false);
+  }, [props.case?._id]);
+
+  if (!props.case) {
+    return null;
+  }
+
+  const descriptionText = getCaseDemoDescription(props.case);
+  const needsVirtualScale = mobileBoxWidth < VIRTUAL_PLAYER_WIDTH;
+  const iframeScale = needsVirtualScale
+    ? mobileBoxWidth / VIRTUAL_PLAYER_WIDTH
+    : 1;
+
+  if (isMobile) {
     return (
       <div
         style={{
-          backgroundColor: "#000000",
-          position: "relative",
+          backgroundColor: "#0a0a0a",
           minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
           overflowX: "hidden",
         }}
       >
-        {/* DESKTOP MEDIA CONTROL LAYOUT (≥ 768px) */}
-        {!isMobile && (
-          <div
-            style={{
-              position: "fixed",
-              top: "48%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "92%",
-              maxWidth: "1020px",
-              aspectRatio: "16 / 9",
-              maxHeight: "75vh",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 1,
-              borderRadius: "16px",
-              overflow: "hidden",
-              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.85)",
-              backgroundColor: "#000000",
-              border: "1px solid rgba(255, 255, 255, 0.14)",
-              pointerEvents: "auto",
-            }}
-          >
-            <iframe
-              src={props.case.video}
-              title={props.case.name || "Case Study Video"}
-              style={{
-                border: "none",
-                width: "100%",
-                height: "100%",
-                display: "block",
-                pointerEvents: "auto",
-              }}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-              allowFullScreen
-            />
-          </div>
-        )}
-
-        {/* MOBILE ALTERNATIVE MEDIA CONTROL LAYOUT (< 768px) */}
-        {isMobile && (
-          <div
-            style={{
-              position: "fixed",
-              top: "43%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "94%",
-              maxWidth: "500px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              zIndex: 1,
-            }}
-          >
-            {/* Mobile Video Frame with Rounded Edges */}
-            <div
-              style={{
-                position: "relative",
-                width: "100%",
-                aspectRatio: "16 / 9",
-                borderRadius: "16px",
-                overflow: "hidden",
-                boxShadow: "0 16px 40px rgba(0, 0, 0, 0.85)",
-                backgroundColor: "#000000",
-                border: "1px solid rgba(255, 255, 255, 0.15)",
-              }}
-            >
-              <iframe
-                src={props.case.video}
-                title={props.case.name || "Mobile Case Video"}
-                style={{
-                  border: "none",
-                  width: "100%",
-                  height: "100%",
-                  display: "block",
-                  pointerEvents: "auto",
-                }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-              />
-            </div>
-
-            {/* Alternative Mobile Media Control Dock */}
-            <div
-              style={{
-                marginTop: "14px",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                gap: "8px",
-                flexWrap: "wrap",
-              }}
-            >
-              <button
-                onClick={() => setIsTheaterOpen(true)}
-                style={{
-                  backgroundColor: "#F1593A",
-                  color: "#ffffff",
-                  border: "none",
-                  borderRadius: "20px",
-                  padding: "7px 15px",
-                  fontSize: "0.78rem",
-                  fontWeight: 600,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  cursor: "pointer",
-                  boxShadow: "0 4px 15px rgba(241, 89, 58, 0.35)",
-                }}
-                aria-label="Open Theater Fullscreen Mode"
-              >
-                <FaExpand size={11} />
-                <span>Theater Mode</span>
-              </button>
-
-              <a
-                href={props.case.video}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  color: "#ffffff",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  borderRadius: "20px",
-                  padding: "7px 14px",
-                  fontSize: "0.78rem",
-                  fontWeight: 600,
-                  textDecoration: "none",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                }}
-              >
-                <FaExternalLinkAlt size={10} />
-                <span>Drive App</span>
-              </a>
-
-              <button
-                onClick={() => {
-                  window.scrollTo({
-                    top: window.innerHeight,
-                    behavior: "smooth",
-                  });
-                }}
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                  color: "#ffffff",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  borderRadius: "20px",
-                  padding: "7px 14px",
-                  fontSize: "0.78rem",
-                  fontWeight: 600,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                <FaChevronDown size={10} />
-                <span>Details</span>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* FULLSCREEN THEATER OVERLAY FOR MOBILE (Allows full-width media controls without cutoff) */}
-        {isTheaterOpen && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.98)",
-              zIndex: 999999,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between",
-              padding: "16px",
-            }}
-          >
-            {/* Top Bar with Case Title & Close Button */}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-                paddingBottom: "12px",
-                borderBottom: "1px solid rgba(255, 255, 255, 0.12)",
-              }}
-            >
-              <span
-                style={{
-                  color: "#ffffff",
-                  fontSize: "0.9rem",
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "1px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  maxWidth: "75%",
-                }}
-              >
-                {props.case.name}
-              </span>
-              <button
-                onClick={() => setIsTheaterOpen(false)}
-                style={{
-                  backgroundColor: "rgba(241, 89, 58, 0.9)",
-                  color: "#ffffff",
-                  border: "none",
-                  borderRadius: "20px",
-                  padding: "6px 14px",
-                  fontSize: "0.8rem",
-                  fontWeight: 600,
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  cursor: "pointer",
-                }}
-              >
-                <FaTimes size={12} />
-                <span>Close</span>
-              </button>
-            </div>
-
-            {/* Maximized Full-Width Video Player */}
-            <div
-              style={{
-                width: "100%",
-                height: "auto",
-                aspectRatio: "16 / 9",
-                maxHeight: "75vh",
-                borderRadius: "12px",
-                overflow: "hidden",
-                backgroundColor: "#000000",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
-              }}
-            >
-              <iframe
-                src={props.case.video}
-                title={props.case.name || "Theater Video Player"}
-                style={{
-                  border: "none",
-                  width: "100%",
-                  height: "100%",
-                  display: "block",
-                }}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
-                allowFullScreen
-              />
-            </div>
-
-            {/* Bottom Helper Hint */}
-            <div style={{ textAlign: "center", paddingBottom: "8px" }}>
-              <span style={{ color: "#aaaaaa", fontSize: "0.75rem" }}>
-                Rotate device to landscape for full screen experience
-              </span>
-            </div>
-          </div>
-        )}
-
-        {/* SCROLL CUE INDICATOR (Visible on both desktop & mobile in fold 1) */}
+        {/* Full 100vh mobile cinema showcase */}
         <div
+          className="case-mobile-stage"
           style={{
-            position: "fixed",
-            bottom: "24px",
-            left: "50%",
-            transform: "translateX(-50%)",
-            zIndex: 1,
-            color: "rgba(255, 255, 255, 0.8)",
-            fontSize: "12px",
-            fontWeight: 600,
-            letterSpacing: "2px",
-            textTransform: "uppercase",
+            position: "relative",
+            backgroundColor: "#0a0a0a",
+            paddingTop: "76px",
+            paddingLeft: "14px",
+            paddingRight: "14px",
+            paddingBottom: "52px",
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
-            gap: "4px",
-            pointerEvents: "none",
+            justifyContent: "center",
+            gap: "18px",
+            boxSizing: "border-box",
           }}
         >
-          <span>Scroll for details</span>
-          <span style={{ fontSize: "15px" }}>↓</span>
-        </div>
-
-        {/* PARALLAX SLIDE-UP CONTENT SECTION (Maintained on both desktop & mobile) */}
-        <div
-          style={{
-            marginTop: "100vh",
-            position: "relative",
-            backgroundColor: "#ffffff",
-            zIndex: 2,
-            borderRadius: isMobile ? "28px 28px 0 0" : "32px 32px 0 0",
-            boxShadow: "0 -15px 45px rgba(0, 0, 0, 0.6)",
-            padding: isMobile
-              ? "45px 20px 60px 20px"
-              : "clamp(50px, 6vw, 90px) clamp(30px, 8vw, 150px)",
-            minHeight: "50vh",
-          }}
-        >
-          <div
-            style={{
-              maxWidth: "860px",
-              margin: "0 auto",
-              textAlign: "center",
-            }}
-          >
-            {/* Header Badge */}
-            <div style={{ marginBottom: "16px" }}>
-              <span
-                style={{
-                  display: "inline-block",
-                  fontSize: "12px",
-                  fontWeight: 700,
-                  letterSpacing: "2px",
-                  color: "#F1593A",
-                  textTransform: "uppercase",
-                  backgroundColor: "rgba(241, 89, 58, 0.12)",
-                  padding: "5px 16px",
-                  borderRadius: "20px",
-                }}
-              >
-                Case Study
-              </span>
-            </div>
-
+          {/* Compact top title grouped directly above the player */}
+          <div style={{ paddingLeft: "2px", paddingRight: "2px" }}>
+            <span
+              style={{
+                display: "inline-block",
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "0.7rem",
+                fontWeight: 700,
+                letterSpacing: "2.2px",
+                color: "#F1593A",
+                textTransform: "uppercase",
+                marginBottom: "6px",
+              }}
+            >
+              Case Study
+            </span>
             <h1
               style={{
                 fontFamily: "'Montserrat', sans-serif",
-                fontSize: isMobile
-                  ? "clamp(1.5rem, 6vw, 2.2rem)"
-                  : "clamp(1.8rem, 4vw, 3rem)",
+                fontSize: "clamp(1.25rem, 5.5vw, 1.65rem)",
                 fontWeight: 800,
-                lineHeight: 1.25,
-                letterSpacing: "-0.5px",
-                color: "#111111",
+                lineHeight: 1.22,
+                letterSpacing: "-0.2px",
+                color: "#ffffff",
                 margin: 0,
                 textTransform: "uppercase",
               }}
             >
               {props.case.name}
             </h1>
+          </div>
+
+          {/* 16:9 player container centered cleanly in the 100vh viewport */}
+          <div
+            ref={mobilePlayerRef}
+            style={{
+              width: "100%",
+              height: 0,
+              paddingBottom: "56.25%",
+              position: "relative",
+              borderRadius: "12px",
+              clipPath: "inset(0 round 12px)",
+              overflow: "hidden",
+              transform: "translateZ(0)",
+              backgroundColor: "#000000",
+              border: "1px solid rgba(255, 255, 255, 0.16)",
+              boxShadow: "0 18px 46px rgba(0, 0, 0, 0.85)",
+            }}
+          >
+            {!isMobilePlaying ? (
+              <button
+                type="button"
+                onClick={() => setIsMobilePlaying(true)}
+                aria-label={`Play ${props.case.name || "case study"} video`}
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  width: "100%",
+                  height: "100%",
+                  padding: 0,
+                  border: "none",
+                  backgroundColor: "#000000",
+                  cursor: "pointer",
+                  display: "block",
+                }}
+              >
+                {props.case.image && (
+                  <img
+                    src={props.case.image}
+                    alt={props.case.name || "Case study preview"}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                      filter: "brightness(0.68)",
+                    }}
+                  />
+                )}
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    background:
+                      "radial-gradient(circle at center, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.62) 100%)",
+                    pointerEvents: "none",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "50%",
+                    backgroundColor: "#F1593A",
+                    color: "#ffffff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    boxShadow: "0 10px 30px rgba(241, 89, 58, 0.55)",
+                    pointerEvents: "none",
+                  }}
+                >
+                  <FaPlay size={20} style={{ marginLeft: "4px" }} />
+                </div>
+              </button>
+            ) : (
+              <iframe
+                src={getAutoplayPreviewUrl(props.case.video)}
+                title={props.case.name || "Case Study Video"}
+                style={
+                  needsVirtualScale
+                    ? {
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: `${VIRTUAL_PLAYER_WIDTH}px`,
+                        height: `${VIRTUAL_PLAYER_HEIGHT}px`,
+                        border: "none",
+                        display: "block",
+                        transform: `scale(${iframeScale})`,
+                        transformOrigin: "top left",
+                      }
+                    : {
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        border: "none",
+                        display: "block",
+                      }
+                }
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+              />
+            )}
+          </div>
+
+          {/* Subtle scroll indicator anchored at bottom of the 100vh stage */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: "20px",
+              left: 0,
+              right: 0,
+              textAlign: "center",
+              color: "rgba(255, 255, 255, 0.65)",
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "0.7rem",
+              fontWeight: 600,
+              letterSpacing: "2px",
+              textTransform: "uppercase",
+              pointerEvents: "none",
+            }}
+          >
+            Scroll for details ↓
+          </div>
+        </div>
+
+        {/* Clean details sheet below the 100vh mobile stage */}
+        <div
+          style={{
+            backgroundColor: "#ffffff",
+            borderRadius: "20px 20px 0 0",
+            padding: "32px 20px 44px 20px",
+          }}
+        >
+          <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "left" }}>
+            <span
+              style={{
+                display: "inline-block",
+                fontFamily: "'Montserrat', sans-serif",
+                fontSize: "0.72rem",
+                fontWeight: 700,
+                letterSpacing: "2px",
+                color: "#F1593A",
+                textTransform: "uppercase",
+                marginBottom: "10px",
+              }}
+            >
+              Project Overview
+            </span>
 
             <p
               style={{
                 fontFamily: "'Montserrat', sans-serif",
-                marginTop: "20px",
-                fontSize: isMobile ? "0.95rem" : "1.05rem",
-                lineHeight: 1.85,
-                color: "#555555",
+                fontSize: "0.95rem",
+                lineHeight: 1.8,
+                color: "#4a4a4a",
+                margin: "0 0 28px 0",
                 fontWeight: 400,
               }}
             >
-              {props.case.description}
+              {descriptionText}
             </p>
 
-            <div className="mt-4 pt-2">
-              <Link
-                to="/home"
-                className="butt"
-                style={{
-                  textDecoration: "none",
-                  display: "inline-block",
-                  fontSize: "14px",
-                  padding: "8px 24px",
-                }}
-              >
-                ← Back to Case Studies
-              </Link>
-            </div>
+            <Link
+              to="/home"
+              className="butt"
+              style={{
+                textDecoration: "none",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minHeight: "42px",
+                padding: "8px 24px",
+                fontSize: "0.88rem",
+                fontWeight: 600,
+                margin: 0,
+              }}
+            >
+              ← Back to Case Studies
+            </Link>
           </div>
         </div>
       </div>
     );
   }
+
+  return (
+    <div
+      style={{
+        backgroundColor: "#0a0a0a",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        overflowX: "hidden",
+      }}
+    >
+      {/* Desktop cinema video stage cleared below fixed navbar */}
+      <div
+        style={{
+          paddingTop: "104px",
+          paddingLeft: "32px",
+          paddingRight: "32px",
+          paddingBottom: "44px",
+          backgroundColor: "#0a0a0a",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: "960px",
+            margin: "0 auto",
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              height: 0,
+              paddingBottom: "56.25%",
+              borderRadius: "14px",
+              overflow: "hidden",
+              transform: "translateZ(0)",
+              backgroundColor: "#000000",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
+              boxShadow: "0 18px 46px rgba(0, 0, 0, 0.78)",
+            }}
+          >
+            <iframe
+              src={props.case.video}
+              title={props.case.name || "Case Study Video"}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                border: "none",
+                width: "100%",
+                height: "100%",
+                display: "block",
+              }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Simple, clean case details sheet directly below video */}
+      <div
+        style={{
+          flex: 1,
+          backgroundColor: "#ffffff",
+          borderRadius: "28px 28px 0 0",
+          padding: "clamp(42px, 5vw, 68px) clamp(28px, 6vw, 96px)",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: "820px",
+            margin: "0 auto",
+            textAlign: "center",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-block",
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "0.78rem",
+              fontWeight: 700,
+              letterSpacing: "2px",
+              color: "#F1593A",
+              textTransform: "uppercase",
+              marginBottom: "10px",
+            }}
+          >
+            Case Study
+          </span>
+
+          <h1
+            style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "clamp(1.8rem, 3.4vw, 2.65rem)",
+              fontWeight: 800,
+              lineHeight: 1.25,
+              letterSpacing: "-0.3px",
+              color: "#111111",
+              margin: "0 0 16px 0",
+              textTransform: "uppercase",
+            }}
+          >
+            {props.case.name}
+          </h1>
+
+          <p
+            style={{
+              fontFamily: "'Montserrat', sans-serif",
+              fontSize: "1.02rem",
+              lineHeight: 1.8,
+              color: "#4a4a4a",
+              margin: "0 0 28px 0",
+              fontWeight: 400,
+            }}
+          >
+            {descriptionText}
+          </p>
+
+          <Link
+            to="/home"
+            className="butt"
+            style={{
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: "42px",
+              padding: "8px 24px",
+              fontSize: "0.88rem",
+              fontWeight: 600,
+              margin: 0,
+            }}
+          >
+            ← Back to Case Studies
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default CaseDeats;

@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  Navbar as BootstrapNavbar,
-  NavLink,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  Container,
-} from "reactstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaTimes } from "react-icons/fa";
 import logo from "../images/Digixwhitelogo.png";
-/* import Burger from './Burger'; */
-import MediaQuery from "react-responsive";
-import { Link } from "react-scroll";
 
 export const Burger = ({ handleOrdPage, linkClick }) => {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 375
+  );
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -23,7 +15,14 @@ export const Burger = ({ handleOrdPage, linkClick }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const sidebarWidth = windowWidth < 640 ? "60vw" : "500px";
+  const sidebarWidth = windowWidth < 640 ? "78vw" : "380px";
+
+  const drawerLinks = [
+    { label: "About Us", target: "aboutus" },
+    { label: "Case Studies", target: "casestu" },
+    { label: "Services", target: "services" },
+    { label: "Contact", target: "contact" },
+  ];
 
   return (
     <motion.div
@@ -34,94 +33,121 @@ export const Burger = ({ handleOrdPage, linkClick }) => {
       exit={{ opacity: 0 }}
     >
       <motion.div
-        onClick={(e) => e.stopPropagation()} // Prevent click event propagation
+        onClick={(e) => e.stopPropagation()}
         initial={{ x: "100%" }}
         animate={{ x: "0%" }}
         exit={{ x: "100%" }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        transition={{ type: "spring", stiffness: 320, damping: 32 }}
         style={{
-          backgroundColor: "#F1593A",
-          color: "rgb(0, 0, 0)",
-          width: sidebarWidth, // Use the calculated width
-          height: "100vh", // Full height of the viewport
-          boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)", // Box shadow for some depth
-          position: "fixed", // Fix to the right side
+          backgroundColor: "#0c0c0c",
+          color: "#ffffff",
+          width: sidebarWidth,
+          height: "100vh",
+          borderLeft: "3px solid #f1593a",
+          borderRadius: 0,
+          boxShadow: "-12px 0 40px rgba(0, 0, 0, 0.7)",
+          position: "fixed",
           top: 0,
           right: 0,
           display: "flex",
           flexDirection: "column",
+          justifyContent: "space-between",
+          padding: "24px",
         }}
       >
+        <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingBottom: "20px",
+              borderBottom: "1px solid rgba(255, 255, 255, 0.12)",
+            }}
+          >
+            <img
+              src={logo}
+              alt="DIGIX"
+              style={{ height: "26px", width: "auto", objectFit: "contain" }}
+            />
+            <button
+              type="button"
+              onClick={handleOrdPage}
+              aria-label="Close menu"
+              style={{
+                background: "transparent",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
+                borderRadius: 0,
+                color: "#ffffff",
+                width: "36px",
+                height: "36px",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+              }}
+            >
+              <FaTimes size={15} />
+            </button>
+          </div>
+
+          <ul style={{ padding: 0, listStyleType: "none", marginTop: "24px" }}>
+            {drawerLinks.map((item, idx) => (
+              <li
+                key={item.target}
+                style={{
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => linkClick(item.target)}
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    borderRadius: 0,
+                    padding: "18px 4px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    color: "#ffffff",
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    letterSpacing: "1.5px",
+                    textTransform: "uppercase",
+                    textAlign: "left",
+                    cursor: "pointer",
+                  }}
+                >
+                  <span>{item.label}</span>
+                  <span style={{ color: "#f1593a", fontSize: "0.75rem", fontWeight: 700 }}>
+                    0{idx + 1}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+
         <div
           style={{
-            flex: 1, // Allow this container to grow and take up available space
-            maxHeight: "calc(100vh - 80px)", // Adjust max height to account for footer space
-            overflowY: "hidden",
-            padding: "0 1rem", // Add padding for aesthetics
+            paddingTop: "18px",
+            borderTop: "1px solid rgba(255, 255, 255, 0.1)",
           }}
         >
-          <ul
-            className="p-3"
-            style={{ padding: 0, listStyleType: "none", marginTop: "10%" }}
+          <p
+            style={{
+              margin: 0,
+              fontSize: "0.72rem",
+              letterSpacing: "1.8px",
+              textTransform: "uppercase",
+              color: "rgba(255, 255, 255, 0.45)",
+            }}
           >
-            <li
-              style={{
-                marginTop: "5px",
-                marginBottom: "5px",
-                fontSize: "18px",
-              }}
-            >
-              <Link
-                style={{ color: "black", fontSize: "18px", fontWeight: "500" }}
-                to="aboutus"
-                spy={true}
-                smooth={true}
-                offset={-100}
-                duration={500}
-                onClick={() => linkClick("aboutus")}
-              >
-                About Us
-              </Link>
-            </li>
-            <li
-              style={{
-                marginTop: "5px",
-                marginBottom: "5px",
-                fontSize: "18px",
-              }}
-            >
-              <Link
-                style={{ color: "black", fontSize: "18px", fontWeight: "500" }}
-                to="casestu"
-                spy={true}
-                smooth={true}
-                offset={-100}
-                duration={500}
-                onClick={() => linkClick("casestu")}
-              >
-                Case Studies
-              </Link>
-            </li>
-            <li
-              style={{
-                marginTop: "5px",
-                marginBottom: "5px",
-                fontSize: "18px",
-              }}
-            >
-              <Link
-                style={{ color: "black", fontSize: "18px", fontWeight: "500" }}
-                to="services"
-                spy={true}
-                smooth={true}
-                offset={-100}
-                duration={500}
-                onClick={() => linkClick("services")}
-              >
-                Servies
-              </Link>
-            </li>
-          </ul>
+            Driven by Relationships &amp; Results
+          </p>
         </div>
       </motion.div>
     </motion.div>
@@ -129,152 +155,168 @@ export const Burger = ({ handleOrdPage, linkClick }) => {
 };
 
 const Navbar = () => {
-  const navigate = useNavigate(); // Replaces useHistory
+  const navigate = useNavigate();
   const location = useLocation();
   const [scrollTarget, setScrollTarget] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollToElement = (targetId) => {
+    if (targetId === "top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    const element = document.getElementById(targetId);
+    if (element) {
+      const offset = targetId === "contact" ? 0 : 88;
+      const elementPosition =
+        element.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: Math.max(0, elementPosition - offset),
+        behavior: "smooth",
+      });
+    }
+  };
 
   function handleClick(targetId) {
-    if (location.pathname !== "/home") {
-      setScrollTarget(targetId); // Set the target for scrolling
-      navigate("/home"); // Redirect to /home
-    } else {
-      setScrollTarget(targetId); // Set target for the current page
+    setIsOpen(false);
+    if (targetId === "contact") {
+      scrollToElement("contact");
+      return;
     }
-    setisOpen(false);
+    if (location.pathname !== "/home") {
+      setScrollTarget(targetId);
+      navigate("/home");
+    } else {
+      scrollToElement(targetId);
+    }
   }
 
   useEffect(() => {
     if (location.pathname === "/home" && scrollTarget) {
-      setTimeout(() => {
-        const element = document.getElementById(scrollTarget);
-        if (element) {
-          const offset = 100; // Set your desired offset here
-          const elementPosition =
-            element.getBoundingClientRect().top + window.scrollY; // Get element position
-          const offsetPosition = elementPosition - offset; // Adjust for offset
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
-        }
-      }, 500); // Delay for navigation to complete
+      const timer = setTimeout(() => {
+        scrollToElement(scrollTarget);
+        setScrollTarget(null);
+      }, 350);
+      return () => clearTimeout(timer);
     }
-  }, [location, scrollTarget]); // Dependency on location and scrollTarget
+  }, [location.pathname, scrollTarget]);
 
-  const [isOpen, setisOpen] = useState(false);
   const burgerToggle = () => {
-    setisOpen(!isOpen);
+    setIsOpen((prev) => !prev);
+  };
+
+  const handleBrandClick = (e) => {
+    e.preventDefault();
+    setIsOpen(false);
+    if (location.pathname !== "/home") {
+      navigate("/home");
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
-    <Container className="nav-container d-flex justify-content-center">
-      <div className="nav-c">
-        <MediaQuery maxWidth={639}>
-          <BootstrapNavbar light expand="md">
-            <NavbarBrand href="/" className="text-white">
-              <img className="logo" src={logo} />
-            </NavbarBrand>
-          </BootstrapNavbar>
-          <div
-            onClick={burgerToggle}
-            style={{
-              cursor: "pointer",
-              position: "absolute",
-              top: "20px",
-              right: "15px",
-            }}
+    <header className="site-navbar-wrap">
+      <nav
+        aria-label="Primary Navigation"
+        className={`nav-c ${scrolled ? "nav-scrolled" : ""}`}
+      >
+        <div className="nav-inner">
+          <a
+            href="#/home"
+            onClick={handleBrandClick}
+            aria-label="DIGIX Home"
+            style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}
           >
-            <div
-              className="bar"
-              style={{
-                width: "30px",
-                height: "2px",
-                backgroundColor: "white",
-                margin: "5px",
+            <img className="logo" src={logo} alt="DIGIX" />
+          </a>
+
+          <div className="nav-desktop-links">
+            <a
+              href="#aboutus"
+              className="nav-ele"
+              onClick={(e) => {
+                e.preventDefault();
+                handleClick("aboutus");
               }}
-            ></div>
-            <div
-              className="bar"
-              style={{
-                width: "15px",
-                height: "2px",
-                backgroundColor: "white",
-                margin: "5px",
+            >
+              About Us
+            </a>
+            <a
+              href="#casestu"
+              className="nav-ele"
+              onClick={(e) => {
+                e.preventDefault();
+                handleClick("casestu");
               }}
-            ></div>
+            >
+              Case Studies
+            </a>
+            <a
+              href="#services"
+              className="nav-ele"
+              onClick={(e) => {
+                e.preventDefault();
+                handleClick("services");
+              }}
+            >
+              Services
+            </a>
+            <a
+              href="#contact"
+              className="nav-cta-btn"
+              onClick={(e) => {
+                e.preventDefault();
+                handleClick("contact");
+              }}
+            >
+              Get in Touch
+            </a>
           </div>
-          <AnimatePresence mode="wait">
-            {isOpen && (
-              <Burger handleOrdPage={burgerToggle} linkClick={handleClick} />
-            )}
-          </AnimatePresence>
-        </MediaQuery>
-        <MediaQuery minWidth={640}>
-          <BootstrapNavbar light expand="md">
-            <NavbarBrand href="/" className="text-white">
-              <img className="logo" src={logo} />
-            </NavbarBrand>
-            <Nav className="ml-auto" navbar>
-              <NavItem className="nav-ele">
-                <Link
-                  style={{
-                    color: "white",
-                    fontSize: "18px",
-                    fontWeight: "500",
-                    cursor: "pointer",
-                  }}
-                  to="aboutus"
-                  spy={true}
-                  smooth={true}
-                  offset={-250}
-                  duration={500}
-                  onClick={() => handleClick("aboutus")}
-                >
-                  About Us
-                </Link>
-              </NavItem>
-              <NavItem className="nav-ele">
-                <Link
-                  style={{
-                    color: "white",
-                    fontSize: "18px",
-                    fontWeight: "500",
-                    cursor: "pointer",
-                  }}
-                  to="casestu"
-                  spy={true}
-                  smooth={true}
-                  offset={-50}
-                  duration={500}
-                  onClick={() => handleClick("casestu")}
-                >
-                  Case Studies
-                </Link>
-              </NavItem>
-              <NavItem className="nav-ele">
-                <Link
-                  style={{
-                    color: "white",
-                    fontSize: "18px",
-                    fontWeight: "500",
-                    cursor: "pointer",
-                  }}
-                  to="services"
-                  spy={true}
-                  smooth={true}
-                  offset={0}
-                  duration={500}
-                  onClick={() => handleClick("services")}
-                >
-                  Services
-                </Link>
-              </NavItem>
-            </Nav>
-          </BootstrapNavbar>
-        </MediaQuery>
-      </div>
-    </Container>
+
+          <button
+            type="button"
+            onClick={burgerToggle}
+            className="nav-burger-btn"
+            aria-label="Toggle navigation menu"
+            aria-expanded={isOpen}
+          >
+            <span
+              style={{
+                width: "24px",
+                height: "2px",
+                backgroundColor: "#ffffff",
+                display: "block",
+              }}
+            />
+            <span
+              style={{
+                width: "16px",
+                height: "2px",
+                backgroundColor: "#f1593a",
+                display: "block",
+              }}
+            />
+          </button>
+        </div>
+      </nav>
+
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <Burger handleOrdPage={burgerToggle} linkClick={handleClick} />
+        )}
+      </AnimatePresence>
+    </header>
   );
 };
 

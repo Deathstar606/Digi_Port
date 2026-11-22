@@ -4,13 +4,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/scrollbar";
-import { Scrollbar, Autoplay } from "swiper/modules";
-import MediaQuery from "react-responsive";
+import { Scrollbar } from "swiper/modules";
 
 function RenderLeader({ leader, handleShow }) {
   return (
     <>
-      <div id="aboutus" style={{ height: "90%", paddingBottom: "50px" }}>
+      <div style={{ height: "90%", paddingBottom: "50px" }}>
         <div style={{ overflow: "hidden" }}>
           <motion.div
             onClick={() => handleShow(leader)} // Pass the leader as a parameter
@@ -122,40 +121,26 @@ function Leaders(people) {
               viewport={{ once: true }}
             >
               <Row className="outer-Img">
-                <MediaQuery minWidth={1279}>
-                  <Swiper
-                    scrollbar={{
-                      hide: true,
-                    }}
-                    modules={[Scrollbar]}
-                    spaceBetween={20}
-                    slidesPerView={5}
-                    className="mySwiper"
-                  >
-                    {people.leaders.map((leader, index) => (
-                      <SwiperSlide key={index}>
-                        <RenderLeader leader={leader} handleShow={handleShow} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </MediaQuery>
-                <MediaQuery maxWidth={640}>
-                  <Swiper
-                    scrollbar={{
-                      hide: false,
-                    }}
-                    modules={[Scrollbar]}
-                    spaceBetween={20}
-                    slidesPerView={1.5}
-                    className="mySwiper"
-                  >
-                    {people.leaders.map((leader, index) => (
-                      <SwiperSlide key={index}>
-                        <RenderLeader leader={leader} handleShow={handleShow} />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </MediaQuery>
+                <Swiper
+                  scrollbar={{
+                    hide: true,
+                  }}
+                  modules={[Scrollbar]}
+                  spaceBetween={20}
+                  slidesPerView={1.4}
+                  breakpoints={{
+                    640: { slidesPerView: 2.3 },
+                    992: { slidesPerView: 3.5 },
+                    1280: { slidesPerView: 5 },
+                  }}
+                  className="mySwiper"
+                >
+                  {people.leaders.map((leader, index) => (
+                    <SwiperSlide key={index}>
+                      <RenderLeader leader={leader} handleShow={handleShow} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </Row>
             </motion.div>
           </Container>

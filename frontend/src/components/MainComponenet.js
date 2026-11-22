@@ -50,11 +50,11 @@ const Home = ({ ct, people }) => {
   return (
     <>
       <HeroSec />
+      <ShowBrand />
       <Show />
       <Leaders leaders={people} />
       <Case casefile={ct} />
       <Service />
-      <ShowBrand />
     </>
   );
 };

@@ -84,6 +84,7 @@ function Footer() {
 
   return (
     <footer
+      id="contact"
       style={{
         backgroundColor: "#333333",
         backgroundImage: `url(${dem})`,
@@ -91,6 +92,7 @@ function Footer() {
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         position: "relative",
+        zIndex: 2,
         overflow: "hidden",
         color: "white",
         fontFamily: "'Montserrat', sans-serif",

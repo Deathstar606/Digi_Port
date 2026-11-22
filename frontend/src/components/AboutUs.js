@@ -8,20 +8,20 @@ import OfficeImg from "../images/office-interior.png";
 
 const AboutUs = () => {
   return (
-    <div id="brand" style={{ maxWidth: "100%", overflow: "hidden", fontFamily: "'Montserrat', sans-serif" }}>
+    <div style={{ maxWidth: "100%", overflow: "hidden", fontFamily: "'Montserrat', sans-serif" }}>
       <Row className="m-0 g-0">
         <Col md={7} className="px-0">
           <motion.div
-            className="pb-5"
-            style={{ backgroundColor: "black", paddingTop: "5%" }}
-            initial={{ x: -100, opacity: 0 }}
-            transition={{ duration: 1, type: "tween", ease: "easeIn" }}
+            className="pb-4 pb-md-5"
+            style={{ backgroundColor: "black", paddingTop: "clamp(24px, 4vw, 48px)" }}
+            initial={{ x: -24, opacity: 0 }}
+            transition={{ duration: 0.5, type: "tween", ease: "easeOut" }}
             whileInView={{ x: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.5 }}
+            viewport={{ once: true, amount: 0.15 }}
           >
-            <div style={{ marginLeft: "10vw" }}>
+            <div style={{ paddingLeft: "clamp(44px, 8vw, 140px)", paddingRight: "24px" }}>
               <h1 
-                className="m-5 text-white"
+                className="my-4 text-white"
                 style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 800,
@@ -36,13 +36,13 @@ const AboutUs = () => {
           </motion.div>
           <div
             style={{
-              marginLeft: "10vw",
-              paddingBottom: "5%",
-              paddingTop: "4%",
+              paddingLeft: "clamp(44px, 8vw, 140px)",
+              paddingRight: "clamp(24px, 4vw, 64px)",
+              paddingBottom: "clamp(60px, 7.8%, 92px)",
+              paddingTop: "5%",
             }}
-            className="pr-5"
           >
-            <div className="ml-5">
+            <div>
               <span 
                 style={{ 
                   color: "#f1593a", 
@@ -109,31 +109,33 @@ const AboutUs = () => {
           </div>
         </Col>
         <Col md={5} className="px-0">
-          <CardImg style={{ minHeight: "100%", height: "100%", objectFit: "cover" }} src={OfficeImg} alt="Office interior" />
+          <CardImg style={{ minHeight: "260px", height: "100%", objectFit: "cover" }} src={OfficeImg} alt="Office interior" />
         </Col>
       </Row>
       <Row className="m-0 g-0">
         <Col md={7} className="px-0">
           <div
+            className="about-parallax-img"
             style={{
-              minHeight: "100%",
+              minHeight: "260px",
               height: "100%",
               backgroundImage: `url(${demo})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
-              backgroundAttachment: "fixed",
             }}
           />
         </Col>
         <Col
           md={5}
-          className="px-0"
-          style={{ marginTop: "5%", marginBottom: "5%" }}
+          style={{
+            padding:
+              "clamp(44px, 5.5vw, 72px) clamp(48px, 5.5vw, 88px) clamp(60px, 7vw, 92px) clamp(36px, 4.5vw, 64px)",
+          }}
         >
-          <div className="pr-5 ml-5 mb-5">
+          <div className="mb-5">
             <h2 
-              className="m-4" 
+              className="mb-3" 
               style={{ 
                 color: "#f1593a",
                 fontFamily: "'Montserrat', sans-serif",
@@ -146,20 +148,20 @@ const AboutUs = () => {
               <StaggeredText text="Our Vision" />
             </h2>
             <p 
-              className="ml-4"
               style={{
                 fontSize: "0.98rem",
                 lineHeight: 1.8,
                 color: "#444444",
-                fontWeight: 400
+                fontWeight: 400,
+                marginBottom: 0
               }}
             >
               To lead the new frontier of full-service digital transformation, empowering visionary brands to maximize their potential, adapt rapidly, and inspire millions across an interconnected world.
             </p>
           </div>
-          <div className="pr-5 ml-5">
+          <div>
             <h2 
-              className="m-4" 
+              className="mb-3" 
               style={{ 
                 color: "#f1593a",
                 fontFamily: "'Montserrat', sans-serif",
@@ -172,12 +174,12 @@ const AboutUs = () => {
               <StaggeredText text="Our Mission" />
             </h2>
             <p 
-              className="ml-4"
               style={{
                 fontSize: "0.98rem",
                 lineHeight: 1.8,
                 color: "#444444",
-                fontWeight: 400
+                fontWeight: 400,
+                marginBottom: 0
               }}
             >
               Through high-caliber cinematography, forward-thinking brand strategy, and precision marketing campaigns, we craft unforgettable narratives that cultivate deep customer affinity and deliver indisputable ROI.

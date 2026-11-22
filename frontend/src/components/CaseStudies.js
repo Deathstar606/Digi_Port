@@ -2,11 +2,9 @@ import React from "react";
 import { Container, Row, Col, CardImg } from "reactstrap";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { FaPlay, FaArrowRight } from "react-icons/fa";
+import { FaPlay } from "react-icons/fa";
 
 const CaseCard = ({ ca, index }) => {
-  const caseNumber = index < 9 ? `0${index + 1}` : `${index + 1}`;
-
   return (
     <Col md={(index + 1) % 3 === 0 ? 12 : 6} className="py-3">
       <motion.div
@@ -31,47 +29,12 @@ const CaseCard = ({ ca, index }) => {
               src={ca.image}
               alt={ca.name || "Case study thumbnail"}
             />
-            {/* Cinematic Gradient Overlay */}
             <div className="cat-overlay" />
 
-            {/* Top Bar Badges */}
-            <div
-              style={{
-                position: "absolute",
-                top: "18px",
-                left: "20px",
-                right: "20px",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                zIndex: 2,
-              }}
-            >
-              <span
-                style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.6)",
-                  backdropFilter: "blur(10px)",
-                  WebkitBackdropFilter: "blur(10px)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
-                  color: "#ffffff",
-                  fontSize: "0.72rem",
-                  fontWeight: 700,
-                  letterSpacing: "1.5px",
-                  textTransform: "uppercase",
-                  borderRadius: "20px",
-                  padding: "5px 14px",
-                }}
-              >
-                Case #{caseNumber}
-              </span>
-            </div>
-
-            {/* Centered Play Button Indicator */}
             <div className="cat-play-btn">
               <FaPlay size={18} style={{ marginLeft: "3px" }} />
             </div>
 
-            {/* Bottom Content / Typography */}
             <div
               className="cat-body"
               style={{
@@ -102,23 +65,6 @@ const CaseCard = ({ ca, index }) => {
               >
                 {ca.name}
               </h4>
-              <div
-                style={{
-                  marginTop: "8px",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  alignSelf: "flex-start",
-                  gap: "6px",
-                  color: "#F1593A",
-                  fontSize: "0.82rem",
-                  fontWeight: 600,
-                  letterSpacing: "1px",
-                  textTransform: "uppercase",
-                }}
-              >
-                <span>Watch Case Study</span>
-                <FaArrowRight size={11} />
-              </div>
             </div>
           </div>
         </Link>
