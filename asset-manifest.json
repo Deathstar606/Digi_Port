@@ -1,9 +1,9 @@
 {
   "files": {
-    "main.css": "/Digi_Port/static/css/main.39f985a3.css",
-    "main.js": "/Digi_Port/static/js/main.94252e32.js",
+    "main.css": "/Digi_Port/static/css/main.6ff71914.css",
+    "main.js": "/Digi_Port/static/js/main.fed75cc9.js",
     "static/js/787.7815d080.chunk.js": "/Digi_Port/static/js/787.7815d080.chunk.js",
-    "static/media/demo.mp4": "/Digi_Port/static/media/demo.a5136bb9b306c8fd2b44.mp4",
+    "static/media/demo.mp4": "/Digi_Port/static/media/demo.51ce0ede1d7c3a0e7e62.mp4",
     "static/media/office-interior.png": "/Digi_Port/static/media/office-interior.e49de0e985447a8b8208.png",
     "static/media/fontawesome-webfont.svg?v=4.7.0": "/Digi_Port/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
     "static/media/demo.jpg": "/Digi_Port/static/media/demo.eeb3fa93e4ac26be82eb.jpg",
@@ -14,12 +14,12 @@
     "static/media/fontawesome-webfont.woff2?v=4.7.0": "/Digi_Port/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
     "static/media/Digixwhitelogo.png": "/Digi_Port/static/media/Digixwhitelogo.90a0a511e3b9d5eb9047.png",
     "index.html": "/Digi_Port/index.html",
-    "main.39f985a3.css.map": "/Digi_Port/static/css/main.39f985a3.css.map",
-    "main.94252e32.js.map": "/Digi_Port/static/js/main.94252e32.js.map",
+    "main.6ff71914.css.map": "/Digi_Port/static/css/main.6ff71914.css.map",
+    "main.fed75cc9.js.map": "/Digi_Port/static/js/main.fed75cc9.js.map",
     "787.7815d080.chunk.js.map": "/Digi_Port/static/js/787.7815d080.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.39f985a3.css",
-    "static/js/main.94252e32.js"
+    "static/css/main.6ff71914.css",
+    "static/js/main.fed75cc9.js"
   ]
 }
